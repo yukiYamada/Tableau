@@ -1,3 +1,5 @@
+from abc import ABCMeta, abstractmethod
+
 def is_logical_connective_sign(value):
     '''
     validating that it is connective sign.
@@ -73,7 +75,7 @@ def split_proposition(propositions):
         return ['']
     
     returnValue =[]
-    ignoreCharacters = '[{,}]'
+    ignoreCharacters = '[{}] '
     splitSign = ','
     temp = ''
     for i in propositions:
@@ -89,3 +91,41 @@ def split_proposition(propositions):
     if temp != '':
         returnValue.append(temp)
     return returnValue
+    
+class ExpandRuleFactory():
+    def get(connective_sign):
+        '''
+        generate ExpandRule by connective_sign.
+        '''
+        if not is_logical_connective_sign(connective_sign):
+            raise InvalidArgumentExceptionOfExpandRule('invalid!' + connective_sign)
+        
+        if '∨'==connective_sign:
+            return ExpandRuleUnion()
+        if 'Λ' == connective_sign:
+            return ExpandRuleIntersect()
+
+class ExpandRule(metaclass=ABCMeta):
+    '''
+    ExpandRule interface class.
+    '''
+    
+    @abstractmethod
+    def split(self):
+        pass
+class ExpandRuleIntersect(ExpandRule):
+    '''
+    'Λ' Expand Rule.
+    '''
+    def split(self):
+        pass
+class ExpandRuleUnion(ExpandRule):
+    '''
+    '∨'  Expand Rule.
+    '''
+    def split(self):
+        pass
+    
+#Exceptions
+class InvalidArgumentExceptionOfExpandRule(Exception):
+    pass

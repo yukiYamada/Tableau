@@ -2,6 +2,8 @@
 import pytest
 # user
 from tableau import main
+from tableau.main import *
+
 def test_is_logical_connective_sign():
     '''
     This test verifies that it is a valid concatenation value.
@@ -12,6 +14,17 @@ def test_is_logical_connective_sign():
     assert main.is_logical_connective_sign('∨')
     assert main.is_logical_connective_sign('￢')
     assert not main.is_logical_connective_sign('A')
+def test_expand_rule_invalid_arugument():
+    '''
+    This test verifies that raising exception.
+    '''
+    with pytest.raises(InvalidArgumentExceptionOfExpandRule):
+        main.ExpandRuleFactory.get('')
+    
+    # valid
+    actual = main.ExpandRuleFactory.get('Λ')
+    assert isinstance(actual, main.ExpandRule)
+
 def test_split_logical_connective():
     '''
     This test verifies that spliting by connective sign.
@@ -59,5 +72,10 @@ def test_split_proposition():
     actual = main.split_proposition(testData)
     assert actual == expected
     
+    # case multi proposition.
+    testData = '{AΛB,AΛC}'
+    expected = ['AΛB','AΛC']
+    actual = main.split_proposition(testData)
+    assert actual == expected
 
     
